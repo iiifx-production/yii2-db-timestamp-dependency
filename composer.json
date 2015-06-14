@@ -12,6 +12,6 @@
         "yiisoft/yii2": "*"
     },
     "autoload": {
-        "psr-4": { "iiifx\\dependency\\": "source/" }
+        "psr-4": { "iiifx\\dependency\\": "src/" }
     }
 }
