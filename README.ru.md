@@ -12,7 +12,7 @@
 $ composer require iiifx-production/yii2-db-timestamp-dependency
 ```
 
-Или
+или
 
 ``` json
 "require": {
@@ -20,11 +20,14 @@ $ composer require iiifx-production/yii2-db-timestamp-dependency
 },
 ```
 
-## Usage
+## Использование
 
 ``` php
-$cachedData = Yii::$app->db->cache( function () {
-    // ...
+$postModelList = Yii::$app->db->cache( function () {
+    return PostModel::find()
+        ->with( [ 'postContentModel' ] )
+        ->where( [ 'is_active' => 1 ] )
+        ->all();
 }, 0, new DbTimestampDependency( [
     'table' => [
         PostModel::tableName(),
@@ -33,10 +36,10 @@ $cachedData = Yii::$app->db->cache( function () {
 ] ) );
 ```
 
-## Credits
+## Автор
 
 - [Vitaliy IIIFX Khomenko](https://github.com/iiifx)
 
-## License
+## Лицензия
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
