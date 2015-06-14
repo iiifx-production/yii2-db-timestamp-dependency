@@ -1,0 +1,17 @@
+{
+    "name": "iiifx/yii2-db-timestamp-dependency",
+    "type": "yii2-extension",
+    "description": "Database timestamp dependency for Yii2 framework",
+    "keywords": ["yii2","timestamp","cache","dependency"],
+    "homepage": "https://github.com/iiifx-production/yii2-db-timestamp-dependency.git",
+    "license": "MIT License",
+    "authors": [
+        { "name": "Vitaliy IIIFX Khomenko", "email": "iiifx@yandex.com" }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": { "iiifx\\dependency\\": "source/" }
+    }
+}
