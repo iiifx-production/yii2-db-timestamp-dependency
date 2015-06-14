@@ -30,15 +30,15 @@ class DbTimestampDependency extends DbDependency {
         if ( !is_array( $this->table ) ) {
             $this->table = (array) $this->table;
         }
-        if ( isset( $this->options[ 'fileds' ] ) ) {
-            if ( isset( $this->options[ 'fileds' ][ 'count' ] ) ) {
-                if ( !is_array( $this->options[ 'fileds' ][ 'count' ] ) ) {
-                    $this->options[ 'fileds' ][ 'count' ] = (array) $this->options[ 'fileds' ][ 'count' ];
+        if ( isset( $this->options[ 'fields' ] ) ) {
+            if ( isset( $this->options[ 'fields' ][ 'count' ] ) ) {
+                if ( !is_array( $this->options[ 'fields' ][ 'count' ] ) ) {
+                    $this->options[ 'fields' ][ 'count' ] = (array) $this->options[ 'fields' ][ 'count' ];
                 }
             }
-            if ( isset( $this->options[ 'fileds' ][ 'max' ] ) ) {
-                if ( !is_array( $this->options[ 'fileds' ][ 'max' ] ) ) {
-                    $this->options[ 'fileds' ][ 'max' ] = (array) $this->options[ 'fileds' ][ 'max' ];
+            if ( isset( $this->options[ 'fields' ][ 'max' ] ) ) {
+                if ( !is_array( $this->options[ 'fields' ][ 'max' ] ) ) {
+                    $this->options[ 'fields' ][ 'max' ] = (array) $this->options[ 'fields' ][ 'max' ];
                 }
             }
         } else {
@@ -48,15 +48,15 @@ class DbTimestampDependency extends DbDependency {
     }
 
     protected function getCountFields () {
-        if ( isset( $this->options[ 'fileds' ][ 'count' ] ) ) {
-            return $this->options[ 'fileds' ][ 'count' ];
+        if ( isset( $this->options[ 'fields' ][ 'count' ] ) ) {
+            return $this->options[ 'fields' ][ 'count' ];
         }
         return [ ];
     }
 
     protected function getMaxFields () {
-        if ( isset( $this->options[ 'fileds' ][ 'max' ] ) ) {
-            return $this->options[ 'fileds' ][ 'max' ];
+        if ( isset( $this->options[ 'fields' ][ 'max' ] ) ) {
+            return $this->options[ 'fields' ][ 'max' ];
         }
         return [ ];
     }
