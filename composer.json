@@ -1,5 +1,5 @@
 {
-    "name": "iiifx/yii2-db-timestamp-dependency",
+    "name": "iiifx-production/yii2-db-timestamp-dependency",
     "type": "yii2-extension",
     "description": "Database timestamp dependency for Yii2 framework",
     "keywords": ["yii2","timestamp","cache","dependency"],
