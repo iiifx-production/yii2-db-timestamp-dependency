@@ -1,58 +1,90 @@
 <?php
 
-namespace iiifx\caching\extra;
+namespace iiifx\cache\dependency;
 
-use Yii;
+use InvalidArgumentException;
 use yii\caching\DbDependency;
+use Yii;
 
 class DbTimestampDependency extends DbDependency {
 
-    /**
-     * Название таблицы или список названий таблиц, которые будут проверяться
-     *
-     * @var string|array
-     */
+    public $options = [
+        'fields' => [
+            'count' => [ 'id' ],
+            'max'   => [ 'date_created', 'date_edited' ],
+        ]
+    ];
+
     public $table;
 
-    /**
-     * Название поля или список названий полей, который будут проверяться
-     *
-     * @var string|array
-     */
-    public $timestamp = [ 'date_created', 'date_edited' ];
-
-    protected $tableList = [];
-
-    protected $fieldList = [];
-
-    protected $queryParts = [];
+    public $reusable = TRUE;
 
     public function init () {
         parent::init();
-        $this->sql = $this->createSql();
+        $this->prepareOptions();
+        $this->buildQuery();
     }
 
-    public function createSql () {
-        if ( $this->table && $this->timestamp ) {
+    protected function prepareOptions () {
+        # Принудительно преобразуем в массивы
+        if ( !is_array( $this->table ) ) {
             $this->table = (array) $this->table;
-            $this->timestamp = (array) $this->timestamp;
-            foreach ( $this->table as $tableName ) {
-                $tableName = Yii::$app->db->getSchema()->getRawTableName( $tableName );
-                $this->tableList[ $tableName ] = $tableName;
-            }
-            $this->queryParts[] = 'SELECT';
-            foreach ( $this->tableList as $tableName ) {
-                $this->queryParts[] = '( SELECT CONCAT( ';
-                foreach ( $this->timestamp as $fieldName ) {
-                    $this->queryParts[] = "MAX( {$tableName}.{$fieldName} ),";
-                }
-                $this->removeLastPartComma( $this->queryParts );
-                $this->queryParts[] = ") FROM {$tableName} ) {$tableName},";
-            }
-            $this->removeLastPartComma( $this->queryParts );
-            return implode( '', $this->queryParts );
         }
-        return NULL;
+        if ( isset( $this->options[ 'fileds' ] ) ) {
+            if ( isset( $this->options[ 'fileds' ][ 'count' ] ) ) {
+                if ( !is_array( $this->options[ 'fileds' ][ 'count' ] ) ) {
+                    $this->options[ 'fileds' ][ 'count' ] = (array) $this->options[ 'fileds' ][ 'count' ];
+                }
+            }
+            if ( isset( $this->options[ 'fileds' ][ 'max' ] ) ) {
+                if ( !is_array( $this->options[ 'fileds' ][ 'max' ] ) ) {
+                    $this->options[ 'fileds' ][ 'max' ] = (array) $this->options[ 'fileds' ][ 'max' ];
+                }
+            }
+        } else {
+            # Опции должны быть указаны
+            throw new InvalidArgumentException();
+        }
+    }
+
+    protected function getCountFields () {
+        if ( isset( $this->options[ 'fileds' ][ 'count' ] ) ) {
+            return $this->options[ 'fileds' ][ 'count' ];
+        }
+        return [ ];
+    }
+
+    protected function getMaxFields () {
+        if ( isset( $this->options[ 'fileds' ][ 'max' ] ) ) {
+            return $this->options[ 'fileds' ][ 'max' ];
+        }
+        return [ ];
+    }
+
+    public function buildQuery () {
+        if ( $this->table ) {
+            $schema = Yii::$app->db->getSchema();
+            $tableList = [ ];
+            foreach ( $this->table as $tableName ) {
+                $tableName = $schema->getRawTableName( $tableName );
+                $tableList[ ] = $tableName;
+            }
+            $queryParts[ ] = 'SELECT';
+            foreach ( $tableList as $tableName ) {
+                $queryParts[ ] = '(SELECT CONCAT(';
+                foreach ( $this->getMaxFields() as $fieldName ) {
+                    $queryParts[ ] = "MAX(`{$tableName}`.`{$fieldName}`),";
+                }
+                $this->removeLastPartComma( $queryParts );
+                foreach ( $this->getCountFields() as $fieldName ) {
+                    $queryParts[ ] = "COUNT(`{$tableName}`.`{$fieldName}`),";
+                }
+                $this->removeLastPartComma( $queryParts );
+                $queryParts[ ] = ") FROM `{$tableName}` ) `{$tableName}`,";
+            }
+            $this->removeLastPartComma( $queryParts );
+            $this->sql = implode( '', $queryParts );
+        }
     }
 
     protected function removeLastPartComma ( &$pasrtList ) {
