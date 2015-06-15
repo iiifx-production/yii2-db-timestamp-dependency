@@ -1,3 +1,5 @@
+# !!! Работа не завершена, не использовать !!!
+
 # yii2-db-timestamp-dependency
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/iiifx-production/yii2-db-timestamp-dependency.svg?style=flat-square)](https://packagist.org/packages/iiifx-production/yii2-db-timestamp-dependency)
